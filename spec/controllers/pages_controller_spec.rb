@@ -8,15 +8,40 @@ describe PagesController do
   end
 
   describe "GET 'home'" do
+
     it "should be successful" do
       get 'home'
       response.should be_success
     end
+
     it "should have the right title" do
       get 'home'
       response.should have_selector("title",
                                     :content => @base_title + " | Home")
     end
+
+    describe "Microposts pluralization in sidebar" do
+
+      before(:each) do
+        @user = Factory(:user)
+        test_sign_in(@user)
+        @micropost = Factory(:micropost, :user => @user)
+      end
+
+      it "should be singular for 1 micropost" do
+        get 'home'
+        response.should_not have_selector(".microposts",
+                                          :content => "microposts")
+      end
+
+      it "should be plural for 2 micropost" do
+        @micropost = Factory(:micropost, :user => @user)
+        get 'home'
+        response.should have_selector(".microposts",
+                                      :content => "microposts")
+      end
+    end
+
   end
 
   describe "GET 'contact'" do
