@@ -18,3 +18,4 @@ group :test do
   gem 'factory_girl_rails', '1.0'
 end
 
+# Non-conflicting change to help learn git
