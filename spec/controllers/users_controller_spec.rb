@@ -444,4 +444,30 @@ describe UsersController do
     end
   end
 
+
+  describe "should have the right stats" do
+    
+    before(:each) do
+      @user = test_sign_in(Factory(:user))
+      @followed = Factory(:user, :email => Factory.next(:email))
+      @followed2 = Factory(:user, :email => Factory.next(:email))
+      @following = Factory(:user, :email => Factory.next(:email))
+      @following2 = Factory(:user, :email => Factory.next(:email))
+      @following3 = Factory(:user, :email => Factory.next(:email))
+      @user.follow!(@followed)
+      @user.follow!(@followed2)
+      @following.follow!(@user)
+      @following2.follow!(@user)
+      @following3.follow!(@user)
+    end
+    
+    it "should have the right follower/following counts" do
+      get :show, :id => @user
+      response.should have_selector("a", :href => following_user_path(@user),
+                                    :content => "2 following")
+      response.should have_selector("a", :href => followers_user_path(@user),
+                                    :content => "3 followers")
+    end
+  end
+
 end

@@ -262,6 +262,20 @@ describe User do
       @followed.followers.should include(@user)
     end
 
+    it "should destroy following relationships" do
+      @user.follow!(@followed)
+      lambda do
+        @user.destroy
+      end.should change(Relationship, :count).by(-1)
+    end
+    
+    it "should destroy follower relationships" do
+      @user.follow!(@followed)
+      lambda do
+        @followed.destroy
+      end.should change(Relationship, :count).by(-1)
+    end
+
   end
 
 
